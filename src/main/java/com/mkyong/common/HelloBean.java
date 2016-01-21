@@ -5,57 +5,86 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.event.ValueChangeEvent;
 import java.io.Serializable;
 
-@ManagedBean(name = "helloBean")
+@ManagedBean(name = "helloBean", eager = false)
 @SessionScoped
 public class HelloBean implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String message = "HELLO WORLD";
-    private String messageFR = "BONJOUR TOUT LE MONDE";
-    private String messageEN = "HELLO WORLD";
+    private String name;
+    private String messageFR;
+    private String messageEN;
+    private String messageES;
+    private String language;
+    private String messageRichText;
 
-    private String localeCode = "EN"; //default value
-    private String localeCodeOld = "EN"; //default value
-
-    public void countryLocaleCodeChanged(ValueChangeEvent e) {
-        System.out.println("--> countryLocaleCodeChanged");
-        localeCode = e.getNewValue().toString();
-        System.out.println("old : " + e.getOldValue().toString());
-        System.out.println("new : " + localeCode);
-        localeCodeOld = e.getOldValue().toString();
+    public HelloBean() {
+        System.out.println("constructor");
+        init();
     }
 
-    public void messageChanged(ValueChangeEvent e) {
-        System.out.println("--> messageChanged");
-        message = e.getNewValue().toString();
-        System.out.println("old : " + e.getOldValue().toString());
-        System.out.println("new : " + message);
-    }
-
-    public void updateMessage() {
-        System.out.println("--> updateMessage");
-        // mise à jour de l'ancien message
-        if (localeCodeOld.equals("FR")) {
-            messageFR = message;
+    public void saveLanguage() {
+        System.out.println("--> saveLanguage");
+        switch (language) {
+            case "FR":
+                messageFR = messageRichText;
+                break;
+            case "EN":
+                messageEN = messageRichText;
+                break;
+            case "ES":
+                messageES = messageRichText;
+                break;
         }
-        else {
-            messageEN = message;
-        }
-        // mise à jour de la valeur du composant richText
-        if (localeCode.equals("FR")) {
-            message = messageFR;
-        } else {
-            message = messageEN;
-        }
+        System.out.println(this.toString());
     }
 
-    public String getLocaleCode() {
-        return localeCode;
+    public void save() {
+        System.out.println("--> SAVE");
+        System.out.println(this.toString());
+        init();
     }
 
-    public void setLocaleCode(String localeCode) {
-        this.localeCode = localeCode;
+    public void init() {
+        name = "";
+        messageFR = "";
+        messageEN = "";
+        messageES = "";
+        language = "FR";
+        messageRichText = "";
+    }
+
+    public void onLanguageChange(ValueChangeEvent e) {
+        System.out.println("--> onLanguageChange : " + messageRichText);
+        switch (e.getNewValue().toString()) {
+            case "FR":
+                messageRichText = messageFR;
+                break;
+            case "EN":
+                messageRichText = messageEN;
+                break;
+            case "ES":
+                messageRichText = messageES;
+                break;
+        }
+        System.out.println("language : " + language);
+        System.out.println("messageRichText : " + messageRichText);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getMessageRichText() {
+        return messageRichText;
+    }
+
+    public void setMessageRichText(String messageRichText) {
+        this.messageRichText = messageRichText;
     }
 
     public String getMessageFR() {
@@ -74,11 +103,19 @@ public class HelloBean implements Serializable {
         this.messageEN = messageEN;
     }
 
-    public String getMessage() {
-        return message;
+    public String getMessageES() {
+        return messageES;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setMessageES(String messageES) {
+        this.messageES = messageES;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
     }
 }
